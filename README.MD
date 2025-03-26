@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/trycatch-lib.svg?style=flat)](https://www.npmjs.com/package/trycatch-lib) <!-- Replace with your actual npm link if published -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) <!-- Ensure you have an MIT LICENSE file -->
+
 <!-- Optional: Add build status, coverage badges etc. -->
 
 A lightweight, zero-dependency TypeScript utility to simplify error handling for synchronous and asynchronous operations by replacing `try...catch` blocks with a consistent `[error, result]` tuple pattern.
@@ -27,7 +28,7 @@ async function fetchData(url: string) {
 }
 
 async function process() {
-  const data = await fetchData('/api/data');
+  const data = await fetchData("/api/data");
   if (data) {
     // Use data
   } else {
@@ -60,22 +61,24 @@ yarn add trycatch-lib
 
 ## Usage
 
-The core idea is to wrap any function (synchronous or asynchronous) that might throw an error with the `trycatch` utility. The wrapped function becomes asynchronous (if it wasn't already) and *always* resolves with a tuple `[error, result]`.
+The core idea is to wrap any function (synchronous or asynchronous) that might throw an error with the `trycatch` utility. The wrapped function becomes asynchronous (if it wasn't already) and _always_ resolves with a tuple `[error, result]`.
 
 ### Basic Example with Async Function
 
 ```typescript
-import { trycatch, isTryCatchError, TryCatchError } from 'trycatch-lib';
+import { trycatch, isTryCatchError, TryCatchError } from "trycatch-lib";
 
 // 1. Define your potentially failing async function
-async function getUserData(userId: number): Promise<{ id: number; name: string }> {
+async function getUserData(
+  userId: number,
+): Promise<{ id: number; name: string }> {
   if (userId <= 0) {
-    throw new Error('Invalid user ID');
+    throw new Error("Invalid user ID");
   }
   // Simulate API call
-  await new Promise(res => setTimeout(res, 100));
+  await new Promise((res) => setTimeout(res, 100));
   if (userId === 99) {
-      throw { code: 'NOT_FOUND', message: 'User 99 does not exist' }; // Simulate non-Error throw
+    throw { code: "NOT_FOUND", message: "User 99 does not exist" }; // Simulate non-Error throw
   }
   return { id: userId, name: `User ${userId}` };
 }
@@ -96,15 +99,17 @@ async function displayUser(id: number) {
     console.error(`Failed to get user ${id}: ${error.message}`);
 
     // You can inspect the original error that was thrown
-    console.error('Original error:', error.originalError);
+    console.error("Original error:", error.originalError);
 
     // Use the type guard for extra safety if needed (though error is always TryCatchError here)
     if (isTryCatchError(error)) {
-        // Access properties like timestamp or originalError safely
-        console.error(`Error occurred at: ${new Date(error.timestamp).toISOString()}`);
-        if (error.originalError instanceof Error) {
-            console.error('Original stack:', error.originalError.stack);
-        }
+      // Access properties like timestamp or originalError safely
+      console.error(
+        `Error occurred at: ${new Date(error.timestamp).toISOString()}`,
+      );
+      if (error.originalError instanceof Error) {
+        console.error("Original stack:", error.originalError.stack);
+      }
     }
     // Update UI, log error, etc.
     return; // Stop execution for this user if needed
@@ -124,10 +129,9 @@ async function displayUser(id: number) {
 // Run examples
 (async () => {
   await displayUser(123); // Success case
-  await displayUser(0);   // Failure case (Error thrown)
-  await displayUser(99);  // Failure case (Object thrown)
+  await displayUser(0); // Failure case (Error thrown)
+  await displayUser(99); // Failure case (Object thrown)
 })();
-
 ```
 
 ### Example with Synchronous Function
@@ -135,12 +139,12 @@ async function displayUser(id: number) {
 `trycatch` also works with synchronous functions, converting them to return a Promise resolving with the tuple.
 
 ```typescript
-import { trycatch } from 'trycatch-lib';
+import { trycatch } from "trycatch-lib";
 
 // 1. Define a sync function that might throw
 function parseJson(jsonString: string): object {
   if (!jsonString) {
-    throw new Error('Input string cannot be empty');
+    throw new Error("Input string cannot be empty");
   }
   return JSON.parse(jsonString); // This can throw JSON.parse error
 }
@@ -155,17 +159,17 @@ async function processJson(input: string) {
 
   if (error) {
     console.error(`Parsing failed: ${error.message}`);
-    console.error('Original error:', error.originalError);
+    console.error("Original error:", error.originalError);
   } else {
-    console.log('Parsing successful:', data);
+    console.log("Parsing successful:", data);
   }
 }
 
 // Run examples
 (async () => {
   await processJson('{"valid": true}'); // Success
-  await processJson('');             // Failure (custom error)
-  await processJson('{"invalid"}');    // Failure (JSON.parse error)
+  await processJson(""); // Failure (custom error)
+  await processJson('{"invalid"}'); // Failure (JSON.parse error)
 })();
 ```
 
@@ -177,12 +181,14 @@ Wraps a function (synchronous or asynchronous) to provide tuple-based error hand
 
 ```typescript
 function trycatch<TFunc extends (...args: any[]) => any>(
-  fn: TFunc
-): (...args: Parameters<TFunc>) => Promise<TryCatchResultTuple<Awaited<ReturnType<TFunc>>>>;
+  fn: TFunc,
+): (
+  ...args: Parameters<TFunc>
+) => Promise<TryCatchResultTuple<Awaited<ReturnType<TFunc>>>>;
 ```
 
-*   **`fn`**: The function to wrap. Can be synchronous (`() => Result`) or asynchronous (`async () => Result` or `() => Promise<Result>`).
-*   **Returns**: A new **asynchronous** function that accepts the same parameters as `fn`. This new function **always resolves** (never rejects) with a `Promise` of `TryCatchResultTuple`.
+- **`fn`**: The function to wrap. Can be synchronous (`() => Result`) or asynchronous (`async () => Result` or `() => Promise<Result>`).
+- **Returns**: A new **asynchronous** function that accepts the same parameters as `fn`. This new function **always resolves** (never rejects) with a `Promise` of `TryCatchResultTuple`.
 
 ### `TryCatchResultTuple<T>`
 
@@ -192,8 +198,8 @@ The type alias for the tuple returned by the wrapped function's promise.
 type TryCatchResultTuple<T> = [TryCatchError | null, T | null];
 ```
 
-*   If the original function `fn` executed successfully, the tuple is `[null, result]`, where `result` is the value returned or resolved by `fn` (type `T`).
-*   If the original function `fn` threw an error or rejected its promise, the tuple is `[TryCatchError, null]`.
+- If the original function `fn` executed successfully, the tuple is `[null, result]`, where `result` is the value returned or resolved by `fn` (type `T`).
+- If the original function `fn` threw an error or rejected its promise, the tuple is `[TryCatchError, null]`.
 
 ### `TryCatchError`
 
@@ -201,11 +207,11 @@ A custom error class that wraps the original error caught from the wrapped funct
 
 **Properties:**
 
-*   **`name`**: `string` (Always `"TryCatchError"`)
-*   **`message`**: `string` (Inherited from `Error`. Defaults to the original error's message if it was an `Error`, otherwise a generic message.)
-*   **`stack`**: `string | undefined` (Inherited from `Error`. Attempts to preserve the original stack trace.)
-*   **`originalError`**: `unknown` (This holds the actual value that was caught (thrown error or rejection reason). **Crucial for inspecting the root cause.**)
-*   **`timestamp`**: `number` (A `Date.now()` timestamp indicating when the error was caught by the wrapper.)
+- **`name`**: `string` (Always `"TryCatchError"`)
+- **`message`**: `string` (Inherited from `Error`. Defaults to the original error's message if it was an `Error`, otherwise a generic message.)
+- **`stack`**: `string | undefined` (Inherited from `Error`. Attempts to preserve the original stack trace.)
+- **`originalError`**: `unknown` (This holds the actual value that was caught (thrown error or rejection reason). **Crucial for inspecting the root cause.**)
+- **`timestamp`**: `number` (A `Date.now()` timestamp indicating when the error was caught by the wrapper.)
 
 ### `isTryCatchError(error: unknown)`
 
@@ -215,8 +221,8 @@ A TypeScript type guard function to safely check if a caught value is an instanc
 function isTryCatchError(error: unknown): error is TryCatchError;
 ```
 
-*   **`error`**: The value to check.
-*   **Returns**: `true` if `error` is an instance of `TryCatchError`, `false` otherwise. Useful within `catch` blocks if you're mixing `trycatch-lib` with standard `try...catch`.
+- **`error`**: The value to check.
+- **Returns**: `true` if `error` is an instance of `TryCatchError`, `false` otherwise. Useful within `catch` blocks if you're mixing `trycatch-lib` with standard `try...catch`.
 
 ### `toasync(fn)`
 
