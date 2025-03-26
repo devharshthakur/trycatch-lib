@@ -1,0 +1,38 @@
+{
+  "name": "trycatch-lib",
+  "version": "1.0.0",
+  "description": "A utility to replace try-catch blocks with a tuple based error handling pattern",
+  "main": "./dist/main.js",
+  "module": "./dist/main.mjs",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/esm/main.d.ts",
+      "require": "./dist/cjs/main.js",
+      "import": "./dist/esm/main.js"
+    }
+  },
+ "scripts": {
+    "clean": "rimraf dist",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.6.5",
+  "devDependencies": {
+    "@types/node": "^22.13.13",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "trycatch-lib": "link:../../../../../Users/harsh/Library/pnpm/global/5/node_modules/trycatch-lib"
+  }
+}
