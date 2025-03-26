@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      trycatch-lib:
-        specifier: link:../../../../../Users/harsh/Library/pnpm/global/5/node_modules/trycatch-lib
-        version: link:../../../../../Users/harsh/Library/pnpm/global/5/node_modules/trycatch-lib
     devDependencies:
       '@types/node':
         specifier: ^22.13.13

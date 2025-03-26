@@ -1,6 +1,6 @@
 {
   "name": "trycatch-lib",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "A utility to replace try-catch blocks with a tuple based error handling pattern",
   "main": "./dist/main.js",
   "module": "./dist/main.mjs",
@@ -33,7 +33,5 @@
     "rimraf": "^6.0.1",
     "typescript": "^5.8.2"
   },
-  "dependencies": {
-    "trycatch-lib": "link:../../../../../Users/harsh/Library/pnpm/global/5/node_modules/trycatch-lib"
-  }
+  "dependencies": {}
 }
