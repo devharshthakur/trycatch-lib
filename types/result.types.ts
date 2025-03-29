@@ -2,10 +2,14 @@ import type { TryCatchError } from "../errors/TryCatchError.js";
 
 /**
  * Represents the result tuple returned by the `trycatch` function.
- * It contains either an error (TryCatchError) and null result,
- * or null error and a successful result.
+ * It contains either a successful value and null error,
+ * or null value and an error (TryCatchError).
  *
- * @template T The expected type of the successful result.
+ * @template T The expected type of the successful value.
  */
 
-export type TryCatchResult<T> = [TryCatchError | null, T | null];
+// Need to define SuccessResult type
+export type SuccessResult<T> = [T, null];
+
+export type FailResult = [null, TryCatchError]; // Here result = null
+export type TryCatchResult<T> = SuccessResult<T> | FailResult;

@@ -5,7 +5,7 @@
 
 <!-- Optional: Add build status, coverage badges etc. -->
 
-A lightweight, zero-dependency TypeScript utility to simplify error handling for synchronous and asynchronous operations by replacing `try...catch` blocks with a consistent `[error, result]` tuple pattern.
+A lightweight, zero-dependency TypeScript utility to simplify error handling for synchronous and asynchronous operations by replacing `try...catch` blocks with a consistent `[result, error]` tuple pattern.
 
 ## The Problem
 
@@ -37,7 +37,7 @@ async function process() {
 }
 ```
 
-This library provides a `trycatch` wrapper function to streamline this pattern, making your code cleaner and more predictable.
+This library provides a `trycatch` wrapper function to streamline this pattern, making your code cleaner and more predictable. It also provides a `makeAsync` utility (with caveats) to convert sync functions to async.
 
 ## Installation
 
@@ -61,47 +61,42 @@ yarn add trycatch-lib
 
 ## Usage
 
-The core idea is to wrap any function (synchronous or asynchronous) that might throw an error with the `trycatch` utility. The wrapped function becomes asynchronous (if it wasn't already) and _always_ resolves with a tuple `[error, result]`.
+### `trycatch` Wrapper
 
-### Basic Example with Async Function
+Wrap any function (sync or async) that might throw with `trycatch`. The wrapped function becomes async (if not already) and _always_ resolves with a tuple `[result, error]`.
 
 ```typescript
 import { trycatch, isTryCatchError, TryCatchError } from "trycatch-lib";
 
-// 1. Define your potentially failing async function
-async function getUserData(
-  userId: number,
-): Promise<{ id: number; name: string }> {
-  if (userId <= 0) {
-    throw new Error("Invalid user ID");
+// 1. Use an existing async function (e.g., fetch)
+async function getJson(url: string): Promise<any> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
-  // Simulate API call
-  await new Promise((res) => setTimeout(res, 100));
-  if (userId === 99) {
-    throw { code: "NOT_FOUND", message: "User 99 does not exist" }; // Simulate non-Error throw
-  }
-  return { id: userId, name: `User ${userId}` };
+  return await response.json();
 }
 
 // 2. Wrap the function
-const safeGetUser = trycatch(getUserData);
+const safeGetJson = trycatch(getJson);
 
 // 3. Call the wrapped function and handle the tuple result
-async function displayUser(id: number) {
-  console.log(`Attempting to get user ${id}...`);
+async function displayData(url: string) {
+  console.log(`Attempting to fetch data from ${url}...`);
 
-  // safeGetUser always resolves, no try/catch needed here!
-  const [error, user] = await safeGetUser(id);
+  // safeGetJson always resolves, no try/catch needed here!
+  // Tuple is now [result, error]
+  const [data, error] = await safeGetJson(url);
 
-  // 4. Check for errors
+  // 4. Check for errors (error is the second element)
   if (error) {
     // 'error' is guaranteed to be an instance of TryCatchError
-    console.error(`Failed to get user ${id}: ${error.message}`);
+    console.error(`Failed to fetch data: ${error.message}`);
 
     // You can inspect the original error that was thrown
     console.error("Original error:", error.originalError);
 
-    // Use the type guard for extra safety if needed (though error is always TryCatchError here)
+    // Use the type guard for extra safety if needed
     if (isTryCatchError(error)) {
       // Access properties like timestamp or originalError safely
       console.error(
@@ -112,31 +107,29 @@ async function displayUser(id: number) {
       }
     }
     // Update UI, log error, etc.
-    return; // Stop execution for this user if needed
+    return; // Stop execution for this URL if needed
   }
 
-  // 5. Handle success - 'user' has the resolved value
-  // Note: 'user' type is { id: number; name: string } | null
-  if (user) {
-    console.log(`Successfully retrieved user: ${user.name} (ID: ${user.id})`);
-    // Update UI with user data
+  // 5. Handle success - 'data' (first element) has the resolved value
+  if (data) {
+    console.log("Successfully retrieved data:", data);
+    // Update UI with data
   } else {
-    // This case might happen if the original function resolved with null/undefined
-    console.log(`User ${id} data resolved to null/undefined.`);
+    console.log("Data resolved to null/undefined successfully.");
   }
 }
 
-// Run examples
+// Run examples (replace with actual URLs)
 (async () => {
-  await displayUser(123); // Success case
-  await displayUser(0); // Failure case (Error thrown)
-  await displayUser(99); // Failure case (Object thrown)
+  await displayData("https://rickandmortyapi.com/api/character"); // Success case
+  await displayData("/api/nonexistent"); // Failure case (404)
+  await displayData("invalid-url"); // Failure case (invalid URL)
 })();
 ```
 
-### Example with Synchronous Function
+### Example with Synchronous Function using `trycatch`
 
-`trycatch` also works with synchronous functions, converting them to return a Promise resolving with the tuple.
+`trycatch` works the same way, wrapping the sync function and returning a Promise resolving to `[result, error]`.
 
 ```typescript
 import { trycatch } from "trycatch-lib";
@@ -155,12 +148,13 @@ const safeParseJson = trycatch(parseJson);
 // 3. Call the wrapped function (it now returns a Promise)
 async function processJson(input: string) {
   console.log(`Parsing: "${input}"`);
-  const [error, data] = await safeParseJson(input);
+  const [data, error] = await safeParseJson(input); // Tuple: [result, error]
 
   if (error) {
     console.error(`Parsing failed: ${error.message}`);
     console.error("Original error:", error.originalError);
   } else {
+    // 'data' is the parsed object (or null if original resolved null)
     console.log("Parsing successful:", data);
   }
 }
@@ -171,6 +165,55 @@ async function processJson(input: string) {
   await processJson(""); // Failure (custom error)
   await processJson('{"invalid"}'); // Failure (JSON.parse error)
 })();
+```
+
+### `makeAsync` Utility (Use with Caution)
+
+Converts a _synchronous_ function into an _asynchronous_ function. It attempts a runtime check to prevent wrapping already-async functions, returning a `MakeAsyncError` in that case. **Warning:** This runtime check (`fn.constructor.name`) is known to be unreliable in some JavaScript environments (e.g., after transpilation/bundling). Prefer compile-time checks or refactoring if possible.
+
+```typescript
+import { makeAsync, MakeAsyncError } from "trycatch-lib";
+
+// 1. Define a synchronous function
+function synchronousDouble(x: number): number {
+  console.log("Running synchronousDouble...");
+  if (typeof x !== "number") throw new TypeError("Input must be a number");
+  return x * 2;
+}
+
+// 2. Use makeAsync
+const asyncDouble = makeAsync(synchronousDouble);
+
+// 3. Check if makeAsync returned an error or the async function
+if (asyncDouble instanceof MakeAsyncError) {
+  console.error("Failed to make function async:", asyncDouble.message);
+} else {
+  // 4. Call the new async function
+  async function runCalculation() {
+    console.log("Calling asyncDouble(5)...");
+    const result = await asyncDouble(5); // No try-catch needed for makeAsync itself
+    console.log("Result:", result); // Output: Result: 10
+
+    try {
+      console.log("Calling asyncDouble('abc')...");
+      await asyncDouble("abc" as any); // Still throws if original sync function throws
+    } catch (e) {
+      console.error("Caught error from asyncDouble:", e); // Catches the TypeError
+    }
+  }
+  runCalculation();
+}
+
+// Example with an async function (makeAsync should return MakeAsyncError)
+async function alreadyAsync(y: number): Promise<number> {
+  return y;
+}
+const result = makeAsync(alreadyAsync);
+if (result instanceof MakeAsyncError) {
+  console.log("Correctly identified async function:", result.message);
+} else {
+  console.error("Error: makeAsync did not detect the async function!");
+}
 ```
 
 ## API Reference
@@ -184,22 +227,24 @@ function trycatch<TFunc extends (...args: any[]) => any>(
   fn: TFunc,
 ): (
   ...args: Parameters<TFunc>
-) => Promise<TryCatchResultTuple<Awaited<ReturnType<TFunc>>>>;
+) => Promise<TryCatchResult<Awaited<ReturnType<TFunc>>>>;
 ```
 
 - **`fn`**: The function to wrap. Can be synchronous (`() => Result`) or asynchronous (`async () => Result` or `() => Promise<Result>`).
-- **Returns**: A new **asynchronous** function that accepts the same parameters as `fn`. This new function **always resolves** (never rejects) with a `Promise` of `TryCatchResultTuple`.
+- **Returns**: A new **asynchronous** function that accepts the same parameters as `fn`. This new function **always resolves** (never rejects) with a `Promise` of `TryCatchResult`.
 
-### `TryCatchResultTuple<T>`
+### `TryCatchResult<T>`
 
 The type alias for the tuple returned by the wrapped function's promise.
 
 ```typescript
-type TryCatchResultTuple<T> = [TryCatchError | null, T | null];
+type SuccessResult<T> = [T, null];
+type FailResult = [null, TryCatchError];
+type TryCatchResult<T> = SuccessResult<T> | FailResult;
 ```
 
-- If the original function `fn` executed successfully, the tuple is `[null, result]`, where `result` is the value returned or resolved by `fn` (type `T`).
-- If the original function `fn` threw an error or rejected its promise, the tuple is `[TryCatchError, null]`.
+- If the original function `fn` executed successfully, the tuple is `[result, null]`, where `result` is the value returned or resolved by `fn` (type `T`).
+- If the original function `fn` threw an error or rejected its promise, the tuple is `[null, TryCatchError]`.
 
 ### `TryCatchError`
 
@@ -215,22 +260,43 @@ A custom error class that wraps the original error caught from the wrapped funct
 
 ### `isTryCatchError(error: unknown)`
 
-A TypeScript type guard function to safely check if a caught value is an instance of `TryCatchError`.
+A TypeScript type guard function to safely check if a caught value is an instance of `TryCatchError`. Useful when dealing with the second element of the `TryCatchResult` tuple.
 
 ```typescript
 function isTryCatchError(error: unknown): error is TryCatchError;
 ```
 
 - **`error`**: The value to check.
-- **Returns**: `true` if `error` is an instance of `TryCatchError`, `false` otherwise. Useful within `catch` blocks if you're mixing `trycatch-lib` with standard `try...catch`.
+- **Returns**: `true` if `error` is an instance of `TryCatchError`, `false` otherwise.
 
-### `toasync(fn)`
+### `makeAsync(fn)`
 
-An alias for the `trycatch` function. It behaves identically.
+**(Use with Caution due to unreliable runtime async check)**
+
+Attempts to convert a strictly synchronous function to an asynchronous one.
 
 ```typescript
-export { trycatch as toasync };
+function makeAsync<TFunc extends (...args: any[]) => any>(
+  fn: TFunc,
+):
+  | ((...args: Parameters<TFunc>) => Promise<ReturnType<TFunc>>)
+  | MakeAsyncError;
 ```
+
+- **`fn`**: The synchronous function to convert.
+- **Returns**: Either:
+  - An `async` function that takes the same parameters as `fn` and returns `Promise<ReturnType<TFunc>>`.
+  - An instance of `MakeAsyncError` if the runtime check detects `fn` might already be asynchronous.
+- **Note**: This function itself does not throw; you must check the return type to see if you received the async function or the `MakeAsyncError`.
+
+### `MakeAsyncError`
+
+A custom error class returned by `makeAsync` when it detects a potentially asynchronous input function. Extends `Error`.
+
+**Properties:**
+
+- **`name`**: `string` (Always `"MakeAsyncError"`)
+- **`message`**: `string` (Indicates why the conversion wasn't performed).
 
 ## Contributing
 

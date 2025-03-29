@@ -7,5 +7,6 @@ import { TryCatchError } from "../errors/TryCatchError.js";
  */
 
 export function isTryCatchError(error: unknown): boolean {
-  return error instanceof TryCatchError;
+  const result: boolean = error instanceof TryCatchError;
+  return result;
 }
