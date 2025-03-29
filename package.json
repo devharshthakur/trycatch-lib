@@ -1,6 +1,6 @@
 {
   "name": "trycatch-lib",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.2.1",
   "description": "A utility to replace try-catch blocks with a tuple based error handling pattern",
   "main": "./dist/main.js",
   "module": "./dist/main.mjs",
