@@ -21,7 +21,6 @@
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
     "format": "prettier --write .",
-    "publish": "pnpm publish --access public --tag alpha",
     "prepublishOnly": "pnpm build"
   },
   "keywords": [],
