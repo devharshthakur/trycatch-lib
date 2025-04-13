@@ -6,7 +6,7 @@ import { TryCatchError } from "../errors/TryCatchError.js";
  * @returns True if the value is an instance of TryCatchError, false otherwise.
  */
 
-export function isTryCatchError(error: unknown): boolean {
+export function isTryCatchError(error: unknown): error is TryCatchError {
   const result: boolean = error instanceof TryCatchError;
   return result;
 }

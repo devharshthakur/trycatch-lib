@@ -19,8 +19,9 @@
     "clean": "rimraf dist",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
-    "format": "prettier --write .",
+    "build": "node build.mjs",
+    "format": "node format.mjs",
+    "format:check": "prettier --check .",
     "prepublishOnly": "pnpm build"
   },
   "keywords": [],
@@ -29,9 +30,14 @@
   "packageManager": "pnpm@10.6.5",
   "devDependencies": {
     "@types/node": "^22.13.13",
+    "@types/signale": "^1.4.7",
+    "nanospinner": "^1.2.2",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "signale": "^1.4.0"
+  }
 }

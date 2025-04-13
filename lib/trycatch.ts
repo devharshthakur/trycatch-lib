@@ -19,7 +19,9 @@ import type {
  * @returns A new asynchronous function that takes the same parameters as `fn`
  *          and returns a Promise resolving to a `TryCatchResult` tuple.
  */
-export function trycatch<TFunc extends (...args: any[]) => any>(fn: TFunc) {
+export function trycatch<TFunc extends (...args: unknown[]) => unknown>(
+  fn: TFunc,
+) {
   return async (
     ...args: Parameters<TFunc>
   ): Promise<TryCatchResult<Awaited<ReturnType<TFunc>>>> => {
@@ -27,7 +29,7 @@ export function trycatch<TFunc extends (...args: any[]) => any>(fn: TFunc) {
       const functionExecutionResult = await fn(...args);
 
       const successResult: SuccessResult<Awaited<ReturnType<TFunc>>> = [
-        functionExecutionResult,
+        functionExecutionResult as Awaited<ReturnType<TFunc>>,
         null,
       ];
       return successResult;
