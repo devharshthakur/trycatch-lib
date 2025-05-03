@@ -11,5 +11,3 @@ export type {
   FailResult,
 } from "../types/result.types.js";
 export { makeAsync } from "../lib/makeAsync.js";
-export { isAsync, isAsyncRuntime } from "../lib/isAsync.js";
-export type { IsAsyncFunction } from "../lib/isAsync.js";

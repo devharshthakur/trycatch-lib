@@ -8,8 +8,6 @@ import type { TryCatchError } from "../errors/TryCatchError.js";
  * @template T The expected type of the successful value.
  */
 
-// Need to define SuccessResult type
 export type SuccessResult<T> = [T, null];
-
 export type FailResult = [null, TryCatchError]; // Here result = null
 export type TryCatchResult<T> = SuccessResult<T> | FailResult;

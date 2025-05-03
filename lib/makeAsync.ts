@@ -1,15 +1,16 @@
+import { MakeAsyncError } from "../errors/MakeAsyncError.js";
+
 /**
- * Converts a synchronous function into an asynchronous function.
- * TypeScript will provide a compile-time error if an async function is passed.
- *
- * @template TFunc The type of the synchronous function to convert.
- * @param fn The synchronous function to convert.
- * @returns An asynchronous function wrapping the original function.
+ * Converts a function to an asynchronous one.
+ * 
+ * @template TFunc - Type of the function to convert
+ * @param {Function} fn - The function to convert
+ * @returns {Function} An asynchronous version of the input function
  */
-export function makeAsync<TFunc extends (...args: any[]) => any>(
-  fn: ReturnType<TFunc> extends Promise<any> ? never : TFunc,
-): (...args: Parameters<TFunc>) => Promise<ReturnType<TFunc>> {
-  return async (...args: Parameters<TFunc>): Promise<ReturnType<TFunc>> => {
-    return fn(...args);
-  };
+export function makeAsync<TFunc extends (...args: unknown[]) => unknown>(
+  fn: TFunc,
+): (...args: Parameters<TFunc>) => Promise<Awaited<ReturnType<TFunc>>> {
+  // Simply wrap the function in Promise.resolve
+  return (...args: Parameters<TFunc>): Promise<Awaited<ReturnType<TFunc>>> => 
+    Promise.resolve(fn(...args)) as Promise<Awaited<ReturnType<TFunc>>>;
 }

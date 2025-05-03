@@ -1,0 +1,16 @@
+templates:
+  - name: ✨ Feature Implementation
+    filename: feature.md
+    about: Submit a new feature implementation
+  - name: 🐛 Bug Fix
+    filename: bugfix.md
+    about: Submit a fix for an existing bug
+  - name: 📚 Documentation Update
+    filename: documentation.md
+    about: Update or improve documentation
+  - name: 🧹 Code Refactoring
+    filename: refactor.md
+    about: Submit code refactoring changes
+  - name: 📋 General Pull Request
+    filename: ../PULL_REQUEST_TEMPLATE.md
+    about: Use this for general changes or if none of the above templates fit 

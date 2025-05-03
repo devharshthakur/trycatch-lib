@@ -1,0 +1,8 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-issue-config.json
+name: "trycatch-lib Issue Templates"
+description: "Choose from the following templates when creating an issue"
+blank_issues_enabled: true
+contact_links:
+  - name: trycatch-lib Discussions
+    url: https://github.com/your-username/trycatch-lib/discussions
+    about: Please ask and answer questions here. 

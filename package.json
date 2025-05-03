@@ -5,9 +5,7 @@
   "main": "./dist/main.js",
   "module": "./dist/main.mjs",
   "type": "module",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "exports": {
     ".": {
       "types": "./dist/esm/main.d.ts",
@@ -19,8 +17,9 @@
     "clean": "rimraf dist",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
-    "format": "prettier --write .",
+    "build": "node scripts/build.mjs",
+    "format": "node scripts/format.mjs",
+    "format:check": "prettier --check .",
     "prepublishOnly": "pnpm build"
   },
   "keywords": [],
