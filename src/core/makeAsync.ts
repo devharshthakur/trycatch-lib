@@ -1,5 +1,3 @@
-import { MakeAsyncError } from "../errors/MakeAsyncError.js";
-
 /**
  * Converts a function to an asynchronous one.
  * 
