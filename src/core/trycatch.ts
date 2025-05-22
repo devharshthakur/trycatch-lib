@@ -1,9 +1,9 @@
-import { TryCatchError } from "../errors/TryCatchError.js";
+import { TryCatchError } from "@/errors/TryCatchError.js";
 import type {
   TryCatchResult,
   FailResult,
   SuccessResult,
-} from "../types/result.types.js";
+} from "@/types/result.types.js";
 
 /**
  * Wraps a function (synchronous or asynchronous) and returns a new async

@@ -2,10 +2,12 @@
   "name": "trycatch-lib",
   "version": "0.1.0-alpha.2.1",
   "description": "A utility to replace try-catch blocks with a tuple based error handling pattern",
-  "main": "./dist/main.js",
-  "module": "./dist/main.mjs",
+  "main": "./dist/cjs/main.js",
+  "module": "./dist/esm/main.js",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "types": "./dist/esm/main.d.ts",
@@ -15,22 +17,26 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build": "node scripts/build.mjs",
-    "format": "node scripts/format.mjs",
+    "build:esm": "tsc -p tsconfig.esm.json && tsc-alias -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json && tsc-alias -p tsconfig.cjs.json",
+    "build": "pnpm clean && pnpm build:esm && pnpm build:cjs",
+    "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepublishOnly": "pnpm build"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Harsh Thakur",
+  "license": "MIT",
   "packageManager": "pnpm@10.6.5",
   "devDependencies": {
     "@types/node": "^22.13.13",
+    "@types/signale": "^1.4.7",
+    "chalk": "^5.4.1",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
+    "signale": "^1.4.0",
+    "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2"
-  },
-  "dependencies": {}
+  }
 }

@@ -1,4 +1,4 @@
-import type { TryCatchError } from "../errors/TryCatchError.js";
+import type { TryCatchError } from "@/errors/TryCatchError.js";
 
 /**
  * Represents the result tuple returned by the `trycatch` function.

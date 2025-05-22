@@ -46,9 +46,7 @@ export class MakeAsyncError extends Error {
 
     // Detailed message with signale
     signale.error(this.message);
-    signale.info(
-      "Check the documentation for proper usage of makeAsync()."
-    );
+    signale.info("Check the documentation for proper usage of makeAsync().");
   }
 
   /**

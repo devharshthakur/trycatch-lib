@@ -7,30 +7,32 @@ trycatch-lib is an open-source utility library focused on providing clean, type-
 ## 🌈 Community Standards
 
 ### ✅ Things We Appreciate:
-* 😊 Being kind and respectful to all contributors
-* 🧠 Sharing knowledge and suggestions for improvements
-* 💬 Giving constructive feedback on implementations
-* 🤝 Helping others understand error handling patterns
-* 🔍 Focusing on maintainable, type-safe solutions
+
+- 😊 Being kind and respectful to all contributors
+- 🧠 Sharing knowledge and suggestions for improvements
+- 💬 Giving constructive feedback on implementations
+- 🤝 Helping others understand error handling patterns
+- 🔍 Focusing on maintainable, type-safe solutions
 
 ### ❌ Things to Avoid:
-* 🚫 Harassment or offensive comments
-* 👎 Personal attacks or derogatory remarks
-* 🔁 Spamming or trolling issues and discussions
-* 🔒 Sharing personal information
-* 😞 Any behavior that would make others feel unwelcome
+
+- 🚫 Harassment or offensive comments
+- 👎 Personal attacks or derogatory remarks
+- 🔁 Spamming or trolling issues and discussions
+- 🔒 Sharing personal information
+- 😞 Any behavior that would make others feel unwelcome
 
 ## 💻 Code Quality Guidelines
 
 For this project, code quality is particularly important:
 
-| Guideline | Description |
-|-----------|-------------|
-| 📝 **TypeScript** | Use proper TypeScript types and avoid `any` type except when absolutely necessary |
-| 📦 **Encapsulation** | Create modular, encapsulated code that's easy to maintain |
-| 💭 **Documentation** | Add detailed JSDoc comments for all public functions and types |
-| 🧩 **Patterns** | Follow consistent error handling patterns established in the codebase |
-| 🧪 **Testing** | Write tests for new functionality and ensure existing tests pass |
+| Guideline            | Description                                                                       |
+| -------------------- | --------------------------------------------------------------------------------- |
+| 📝 **TypeScript**    | Use proper TypeScript types and avoid `any` type except when absolutely necessary |
+| 📦 **Encapsulation** | Create modular, encapsulated code that's easy to maintain                         |
+| 💭 **Documentation** | Add detailed JSDoc comments for all public functions and types                    |
+| 🧩 **Patterns**      | Follow consistent error handling patterns established in the codebase             |
+| 🧪 **Testing**       | Write tests for new functionality and ensure existing tests pass                  |
 
 ## ⚠️ If Problems Arise
 

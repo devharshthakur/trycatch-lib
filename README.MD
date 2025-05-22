@@ -62,12 +62,12 @@ const safeJsonParse = trycatch(JSON.parse);
 // Usage with clear error handling
 async function parseUserData(input: string) {
   const [data, error] = await safeJsonParse(input);
-  
+
   if (error) {
     console.error("Failed to parse:", error.message);
     return;
   }
-  
+
   // Data is guaranteed to exist here
   return data;
 }
@@ -96,17 +96,17 @@ const safeFetch = trycatch(fetch);
 // Then use it with the [result, error] pattern
 async function getUser(id: string) {
   const [response, fetchError] = await safeFetch(`/api/users/${id}`);
-  
+
   if (fetchError) {
     return console.error("Network error:", fetchError.message);
   }
-  
+
   const [data, parseError] = await trycatch(response.json)();
-  
+
   if (parseError) {
     return console.error("Parse error:", parseError.message);
   }
-  
+
   console.log("User data:", data);
 }
 ```
@@ -121,10 +121,10 @@ const [result, error] = await safeOperation();
 if (error) {
   // Basic error information
   console.error(error.message);
-  
+
   // Access the original error
   console.error("Original:", error.originalError);
-  
+
   // Get when the error occurred
   console.error("Timestamp:", new Date(error.timestamp).toLocaleString());
 }
@@ -158,8 +158,11 @@ Wraps a function to provide tuple-based error handling.
 
 ```typescript
 // Signature
-function trycatch<TFunc>(fn: TFunc): (...args: Parameters<TFunc>) => 
-  Promise<[Awaited<ReturnType<TFunc>>, null] | [null, TryCatchError]>;
+function trycatch<TFunc>(
+  fn: TFunc,
+): (
+  ...args: Parameters<TFunc>
+) => Promise<[Awaited<ReturnType<TFunc>>, null] | [null, TryCatchError]>;
 
 // Example
 const safeFunction = trycatch(originalFunction);
@@ -179,7 +182,7 @@ import { makeAsync } from "trycatch-lib";
 const asyncFunction = makeAsync(synchronusFunction);
 ```
 
-⚠️ **Important Note**: Only use `makeAsync` with synchronous functions. Using it with functions that already return Promises will cause double-wrapping, resulting in a `Promise<Promise<T>>` instead of `Promise<T>`. 
+⚠️ **Important Note**: Only use `makeAsync` with synchronous functions. Using it with functions that already return Promises will cause double-wrapping, resulting in a `Promise<Promise<T>>` instead of `Promise<T>`.
 
 **Example of proper usage:**
 
@@ -202,7 +205,7 @@ async function fetchData() {
 }
 
 // This will double-wrap the Promise
-const asyncFetch = makeAsync(fetchData); 
+const asyncFetch = makeAsync(fetchData);
 // Now requires: await (await asyncFetch())
 ```
 
@@ -225,19 +228,19 @@ const safeReadFile = trycatch(readFile);
 
 async function loadConfig() {
   const [data, error] = await safeReadFile("config.json", "utf8");
-  
+
   if (error) {
     console.error("Could not read config:", error.message);
     return defaultConfig;
   }
-  
+
   const [config, parseError] = await trycatch(JSON.parse)(data);
-  
+
   if (parseError) {
     console.error("Invalid config format:", parseError.message);
     return defaultConfig;
   }
-  
+
   return config;
 }
 ```
@@ -249,23 +252,23 @@ import { trycatch } from "trycatch-lib";
 
 async function getWeather(city) {
   const url = `https://api.weather.com/forecast?city=${city}`;
-  
+
   const [response, fetchError] = await trycatch(fetch)(url);
-  
+
   if (fetchError) {
     return { success: false, error: "Network error" };
   }
-  
+
   if (!response.ok) {
     return { success: false, error: `API error: ${response.status}` };
   }
-  
+
   const [data, parseError] = await trycatch(response.json)();
-  
+
   if (parseError) {
     return { success: false, error: "Invalid data format" };
   }
-  
+
   return { success: true, data };
 }
 ```
@@ -273,6 +276,7 @@ async function getWeather(city) {
 ## 🔌 Dependencies
 
 Two lightweight dependencies:
+
 - `chalk`: For colorful terminal output
 - `signale`: For structured logging
 

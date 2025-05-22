@@ -1,6 +1,7 @@
 # 📋 Changelog
 
 This file in the main branch represents the current state of the project, including:
+
 - What features have been completed
 - What is currently under development
 - What is planned for future development
@@ -35,6 +36,7 @@ This file in the main branch represents the current state of the project, includ
 > **Summary:** Initial alpha release with core functionality
 
 **Changes:**
+
 - Implemented core `trycatch` function for tuple-based error handling
 - Created enhanced `TryCatchError` class with detailed error information
 - Added utility functions for async detection and conversion
@@ -55,6 +57,7 @@ This file in the main branch represents the current state of the project, includ
 - ✓ 📝 Basic documentation and examples in README
 
 ## 🔄 Under Development
+
 - [ ] 🧪 Comprehensive test suite for all core functionality
 - [ ] 📚 API documentation with detailed examples
 - [ ] 🔍 Enhanced type safety and edge case handling
@@ -74,22 +77,24 @@ This file in the main branch represents the current state of the project, includ
 - [ ] 🧩 Integration with popular frameworks and libraries
 - [ ] 🔄 Pipeline operators for chaining error-prone operations
 - [ ] 📚 Interactive documentation site with live examples
+
 ---
 
 ## 📚 Types of Changes
 
-| Emoji | Type | Description |
-|-------|------|-------------|
-| ✅ | `Added` | New features |
-| 🔄 | `Changed` | Changes in existing functionality |
-| ⚠️ | `Deprecated` | Soon-to-be removed features |
-| 🗑️ | `Removed` | Removed features |
-| 🐛 | `Fixed` | Bug fixes |
-| 🔒 | `Security` | Vulnerability fixes |
+| Emoji | Type         | Description                       |
+| ----- | ------------ | --------------------------------- |
+| ✅    | `Added`      | New features                      |
+| 🔄    | `Changed`    | Changes in existing functionality |
+| ⚠️    | `Deprecated` | Soon-to-be removed features       |
+| 🗑️    | `Removed`    | Removed features                  |
+| 🐛    | `Fixed`      | Bug fixes                         |
+| 🔒    | `Security`   | Vulnerability fixes               |
 
 ---
 
 <div align="left">
 
 > **Note:** Contributors should refer to this document to understand the project's current status and priorities before starting work on new features or improvements. Please also update this file when making significant changes to reflect the current state of the project.
-</div> 
+
+</div>
