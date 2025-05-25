@@ -6,7 +6,6 @@
  */
 
 export { trycatch } from "@/core/trycatch.js";
-export { makeAsync } from "@/core/makeAsync.js";
 export { TryCatchError } from "@/errors/TryCatchError.js";
 export { isTryCatchError } from "@/utils/isTryCatchError.js";
 

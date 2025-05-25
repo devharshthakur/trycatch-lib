@@ -9,5 +9,5 @@ import type { TryCatchError } from "@/errors/TryCatchError.js";
  */
 
 export type SuccessResult<T> = [T, null];
-export type FailResult = [null, TryCatchError]; // Here result = null
+export type FailResult = [null, TryCatchError]; // Here result = null as error in execution would have occured
 export type TryCatchResult<T> = SuccessResult<T> | FailResult;

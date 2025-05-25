@@ -1,217 +1,156 @@
-# trycatch-lib
-
-<div>
+# ⚡️ trycatch-lib
 
 [![npm version](https://img.shields.io/npm/v/trycatch-lib.svg?style=flat)](https://www.npmjs.com/package/trycatch-lib)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.2-blue)](https://www.typescriptlang.org/)
-[![Dependencies](https://img.shields.io/badge/dependencies-2-brightgreen)](package.json)
 
-**Error handling, simplified.**
+> **Simple, type-safe error handling for TypeScript.**
 
-Replace chaotic try/catch blocks with clean, predictable `[result, error]` tuples.
+---
 
-</div>
-
-## 📦 Installation
+## 📦 Install
 
 ```bash
-# Using npm
-npm install trycatch-lib
-
-# Using yarn
-yarn add trycatch-lib
-
-# Using pnpm
 pnpm add trycatch-lib
+# or
+yarn add trycatch-lib
+# or
+npm install trycatch-lib
 ```
 
-## 🚀 Quick Example
+---
 
-**Before:** Traditional error handling with try/catch
+## 🚀 Quick Example: API Call
+
+### ❌ Traditional try/catch
 
 ```typescript
-// Traditional try/catch approach
-function parseUserData(input: string) {
+async function fetchUser(id: string) {
   try {
-    const data = JSON.parse(input);
+    const res = await fetch(`/api/user/${id}`);
+    const data = await res.json();
     return data;
-  } catch (error) {
-    console.error("Failed to parse:", error);
-    return null; // Ambiguous return value
+  } catch (err) {
+    return null; // Error details lost
   }
-}
-
-// Usage requires null checks
-const userData = parseUserData(input);
-if (userData) {
-  // Process data
-} else {
-  // Error occurred, but details are lost
 }
 ```
 
-**After:** Clean tuple-based error handling
+### ✅ With trycatch-lib
 
 ```typescript
 import { trycatch } from "trycatch-lib";
 
-// Wrap the function that might throw
-const safeJsonParse = trycatch(JSON.parse); // or just pass the function in trycatch from start( which i recommend)
+async function fetchUser(id: string) {
+  // For built-in functions like fetch, pass directly
+  const [res, fetchErr] = await trycatch(fetch(`/api/user/${id}`));
+  if (fetchErr) return null;
 
-// Usage with clear error handling
-async function parseUserData(input: string) {
-  const [data, error] = await safeJsonParse(input);
+  // For custom logic, use an arrow/anonymous function is what i recommend
+  const [data, jsonErr] = await trycatch(() => {
+    // your custom logic
+  });
+  if (jsonErr) return null;
 
-  if (error) {
-    console.error("Failed to parse:", error.message);
-    return;
-  }
-
-  // Data is guaranteed to exist here
   return data;
 }
 ```
 
-## ✨ Key Features
+---
 
-- 🎯 **Predictable return values** - always get `[result, error]` tuples
-- 🔄 **Works with sync and async functions** - same pattern everywhere
-- 🧠 **Fully type-safe** - maintains TypeScript types throughout
-- 🔍 **Enhanced error details** - access to original error information
-- 🚀 **Minimal learning curve** - intuitive API with no complex concepts
+## ✨ Features
 
-## 📚 Usage Guide
+- 🧩 **[result, error]** tuple for all functions
+- 🔄 Works with sync & async (Promise) functions
+- 🧠 Fully type-safe, no `any` required
+- 🔍 Rich error info via `TryCatchError`
+- 🚀 Minimal, zero-config API
 
-### Basic Usage
+---
 
-The core functionality is simple - wrap any function that might throw an error:
-
-```typescript
-import { trycatch } from "trycatch-lib";
-
-// Wrap a function that might throw
-const safeFetch = trycatch(fetch);
-
-// Then use it with the [result, error] pattern
-async function getUser(id: string) {
-  const [response, fetchError] = await safeFetch(`/api/users/${id}`);
-
-  if (fetchError) {
-    return console.error("Network error:", fetchError.message);
-  }
-
-  const [data, parseError] = await trycatch(response.json)();
-
-  if (parseError) {
-    return console.error("Parse error:", parseError.message);
-  }
-
-  console.log("User data:", data);
-}
-```
-
-### Working with Error Details
-
-When an error occurs, you get a `TryCatchError` with helpful properties:
+## 📝 Usage
 
 ```typescript
-const [result, error] = await safeOperation();
+// For built-in or pre-made functions, pass directly: ( way i recommend)
+const [result, error] = await trycatch(fetch(url));
+
+// For custom logic, use an arrow/anonymous function i reccomend, it prevents you to make a additional wrappers
+const [result, error] = await trycatch(() => {
+  // function body
+});
 
 if (error) {
-  // Basic error information
+  // error is always a TryCatchError instance:
   console.error(error.message);
-
-  // Access the original error
-  console.error("Original:", error.originalError);
-
-  // Get when the error occurred
-  console.error("Timestamp:", new Date(error.timestamp).toLocaleString());
 }
 ```
 
-### Handling Different Error Types
+- **Use arrow/anonymous functions for custom logic.**
+- **Pass built-in or pre-made functions (like fetch, JSON.parse) directly.**
+- Handles both sync and async functions.
 
-You can check for specific error types:
+---
+
+## 📚 API
+
+- `trycatch(fn)` → Returns an async function that returns `[result, error]`.
+- `TryCatchError` → Custom error with `.originalError` and `.timestamp`.
+
+---
+
+## 🛑 `TryCatchError` – Error Handling Made Consistent
+
+All errors returned by `trycatch` are wrapped in a `TryCatchError` instance for consistent, type-safe error handling.
+
+### What is `TryCatchError`?
+
+A custom error class (see [`src/errors/TryCatchError.ts`](src/errors/TryCatchError.ts)) that standardizes error information, making it easy to inspect, log, or handle errors in a predictable way.
+
+### Properties
+
+- **`message: string`** – Human-readable error message (from the original error, or a default fallback)
+- **`originalError: unknown`** – The original error value (can be any type: `Error`, string, object, etc.)
+- **`timestamp: number`** – When the error was created (milliseconds since epoch)
+
+### Usage Example
 
 ```typescript
-const [data, error] = await safeFetch("/api/data");
+import { trycatch, TryCatchError } from "trycatch-lib";
+
+const [result, error] = await trycatch(() => {
+  // function logic which can throw error
+  return; // fn return type
+});
 
 if (error) {
-  if (error.isOriginalInstanceOf(TypeError)) {
-    console.error("Type error occurred");
-  } else if (error.isOriginalInstanceOf(NetworkError)) {
-    console.error("Network error occurred");
-  } else {
-    console.error("Unknown error:", error.message);
+  // Always a TryCatchError instance
+  console.error("Message:", error.message);
+  console.error("Original error:", error.originalError);
+  console.log("Occurred at:", new Date(error.timestamp));
+
+  // How to use it as Type guard
+  if (error instanceof TryCatchError) {
+    // ...handle specifically
   }
 }
 ```
 
-## 📋 Examples
+### Best Practices
 
-### File Operations
+- Use `.originalError` if you need the raw error (for logging, rethrowing, etc.)
+- `.message` is always a string, even if the original error was not
+- `.timestamp` helps with debugging and tracing error events
 
-```typescript
-import { readFile } from "fs/promises";
-import { trycatch } from "trycatch-lib";
+---
 
-const safeReadFile = trycatch(readFile);
+## 🧪 Test
 
-async function loadConfig() {
-  const [data, error] = await safeReadFile("config.json", "utf8");
-
-  if (error) {
-    console.error("Could not read config:", error.message);
-    return defaultConfig;
-  }
-
-  const [config, parseError] = await trycatch(JSON.parse)(data);
-
-  if (parseError) {
-    console.error("Invalid config format:", parseError.message);
-    return defaultConfig;
-  }
-
-  return config;
-}
+```bash
+pnpm test
 ```
 
-### API Requests
-
-```typescript
-import { trycatch } from "trycatch-lib";
-
-async function getWeather(city) {
-  const url = `https://api.weather.com/forecast?city=${city}`;
-
-  const [response, fetchError] = await trycatch(fetch)(url);
-
-  if (fetchError) {
-    return { success: false, error: "Network error" };
-  }
-
-  if (!response.ok) {
-    return { success: false, error: `API error: ${response.status}` };
-  }
-
-  const [data, parseError] = await trycatch(response.json)();
-
-  if (parseError) {
-    return { success: false, error: "Invalid data format" };
-  }
-
-  return { success: true, data };
-}
-```
-
-## 🔌 Dependencies
-
-Two lightweight dependencies:
-
-- `chalk`: For colorful terminal output
-- `signale`: For structured logging
+---
 
 ## 📄 License
 
-This project is licensed under the [MIT License](./LICENSE) - see the LICENSE file for details.
+MIT
