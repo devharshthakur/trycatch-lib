@@ -57,7 +57,7 @@ if (userData) {
 import { trycatch } from "trycatch-lib";
 
 // Wrap the function that might throw
-const safeJsonParse = trycatch(JSON.parse);
+const safeJsonParse = trycatch(JSON.parse); // or just pass the function in trycatch from start( which i recommend)
 
 // Usage with clear error handling
 async function parseUserData(input: string) {
@@ -146,74 +146,6 @@ if (error) {
     console.error("Unknown error:", error.message);
   }
 }
-```
-
-## 🧩 API Overview
-
-### Core Function
-
-#### `trycatch(fn)`
-
-Wraps a function to provide tuple-based error handling.
-
-```typescript
-// Signature
-function trycatch<TFunc>(
-  fn: TFunc,
-): (
-  ...args: Parameters<TFunc>
-) => Promise<[Awaited<ReturnType<TFunc>>, null] | [null, TryCatchError]>;
-
-// Example
-const safeFunction = trycatch(originalFunction);
-const [result, error] = await safeFunction(...args);
-```
-
-### Utilities
-
-#### `makeAsync(fn)`
-
-Converts a function to an asynchronous one.
-
-```typescript
-import { makeAsync } from "trycatch-lib";
-
-// Use only with synchronous functions
-const asyncFunction = makeAsync(synchronusFunction);
-```
-
-⚠️ **Important Note**: Only use `makeAsync` with synchronous functions. Using it with functions that already return Promises will cause double-wrapping, resulting in a `Promise<Promise<T>>` instead of `Promise<T>`.
-
-**Example of proper usage:**
-
-```typescript
-// ✅ CORRECT: Using with a synchronous function
-function add(a: number, b: number) {
-  return a + b;
-}
-
-const asyncAdd = makeAsync(add);
-const result = await asyncAdd(2, 3); // Returns 5
-```
-
-**Example of improper usage:**
-
-```typescript
-// ❌ INCORRECT: Using with an already-async function
-async function fetchData() {
-  return await fetch("/api/data");
-}
-
-// This will double-wrap the Promise
-const asyncFetch = makeAsync(fetchData);
-// Now requires: await (await asyncFetch())
-```
-
-If you're unsure whether a function is async, it's usually better to use `trycatch` directly:
-
-```typescript
-// Safe with both sync and async functions
-const [result, error] = await trycatch(myFunction)(...args);
 ```
 
 ## 📋 Examples
