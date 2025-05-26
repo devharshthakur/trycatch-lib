@@ -13,4 +13,4 @@ templates:
     about: Submit code refactoring changes
   - name: 📋 General Pull Request
     filename: ../PULL_REQUEST_TEMPLATE.md
-    about: Use this for general changes or if none of the above templates fit 
+    about: Use this for general changes or if none of the above templates fit

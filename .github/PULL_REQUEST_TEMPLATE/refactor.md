@@ -19,7 +19,7 @@ labels: refactor
 - [ ] Improve library bundle size
 - [ ] Optimize performance
 - [ ] Update TypeScript patterns
-- [ ] Other: 
+- [ ] Other:
 
 ## 🔍 Changes Made
 
@@ -52,4 +52,4 @@ labels: refactor
 - [ ] Refactoring doesn't change external API behavior
 - [ ] TypeScript types are more precise or equally precise
 - [ ] Code is properly formatted
-- [ ] JSDoc comments are updated 
+- [ ] JSDoc comments are updated

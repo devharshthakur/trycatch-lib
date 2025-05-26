@@ -4,7 +4,7 @@ name: 🐛 Bug Report
 about: Report a bug to help us improve
 title: "[BUG] "
 labels: bug
-assignees: ''
+assignees: ""
 ---
 
 ## 🐛 Bug Description
@@ -13,9 +13,9 @@ assignees: ''
 
 ## 🔄 Steps To Reproduce
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## 🔍 Expected Behavior
 
@@ -58,4 +58,4 @@ Error message and stack trace here
 
 ## 🔄 Possible Solution
 
-<!-- If you have suggestions on a fix for the bug, please describe here --> 
+<!-- If you have suggestions on a fix for the bug, please describe here -->

@@ -12,15 +12,16 @@ labels: documentation
 ## 🔗 Related Issue
 
 <!-- Link to any related issues -->
+
 Related to #
 
 ## 📄 Changed Files
 
 <!-- List the files you've updated -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## 🔍 Motivation
 
@@ -62,4 +63,4 @@ Related to #
 - [ ] All code examples are accurate and working
 - [ ] Type information is correct and complete
 - [ ] Error handling behavior is clearly explained
-- [ ] Links to related documentation are included where helpful 
+- [ ] Links to related documentation are included where helpful

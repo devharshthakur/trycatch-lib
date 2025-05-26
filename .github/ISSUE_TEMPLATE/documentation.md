@@ -4,7 +4,7 @@ name: 📚 Documentation Improvement
 about: Suggest improvements to our documentation
 title: "[DOCS] "
 labels: documentation
-assignees: ''
+assignees: ""
 ---
 
 ## 📚 Documentation Issue
@@ -48,4 +48,4 @@ assignees: ''
 
 ## 🔄 Additional Context
 
-<!-- Add any other context about the documentation issue here --> 
+<!-- Add any other context about the documentation issue here -->

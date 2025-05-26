@@ -12,6 +12,7 @@ labels: bug, fix
 ## 🔗 Related Issue
 
 <!-- Link to the bug report issue -->
+
 Fixes #
 
 ## 🔍 Root Cause
@@ -39,9 +40,9 @@ Fixes #
 
 <!-- How can reviewers verify that your fix works? -->
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## 🔄 Error Handling Verification
 
@@ -62,4 +63,4 @@ Fixes #
 - [ ] All existing tests still pass
 - [ ] Type safety is maintained or improved
 - [ ] The fix is focused and doesn't introduce unrelated changes
-- [ ] Documentation has been updated if needed 
+- [ ] Documentation has been updated if needed

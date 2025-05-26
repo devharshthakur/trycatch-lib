@@ -1,4 +1,4 @@
-import { TryCatchError } from "../errors/TryCatchError.js";
+import { TryCatchError } from "@/errors/TryCatchError.js";
 
 /**
  * Type guard to check if an error is an instance of TryCatchError.

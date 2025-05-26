@@ -15,11 +15,11 @@ Thank you for your interest in contributing to trycatch-lib! This document provi
 
 When contributing, please create a branch with this naming convention:
 
-| Type | Format | Example |
-| --- | --- | --- |
-| 🆕 Feature | `feature/<what-you're-adding>` | `feature/custom-error-type` |
-| 🐛 Fix | `fix/<what-you're-fixing>` | `fix/async-detection` |
-| 📚 Documentation | `docs/<what-you're-documenting>` | `docs/api-usage` |
+| Type             | Format                           | Example                     |
+| ---------------- | -------------------------------- | --------------------------- |
+| 🆕 Feature       | `feature/<what-you're-adding>`   | `feature/custom-error-type` |
+| 🐛 Fix           | `fix/<what-you're-fixing>`       | `fix/async-detection`       |
+| 📚 Documentation | `docs/<what-you're-documenting>` | `docs/api-usage`            |
 
 ## 🔀 Git Workflow & Branch Strategy
 
@@ -115,6 +115,7 @@ When contributing, please create a branch with this naming convention:
 Keep commit messages clear and descriptive. For extensive changes, add details in the commit description.
 
 For example:
+
 ```
 Add error serialization methods to TryCatchError
 
@@ -130,6 +131,7 @@ Resolves #42
 ### 🔀 Pull Requests
 
 When submitting a pull request:
+
 1. 📝 Describe your changes in the PR description
 2. 🔗 Reference any related issues (`Fixes #123`)
 3. 📸 Include examples of how your changes improve the library
@@ -153,22 +155,22 @@ This project strongly emphasizes JSDoc comments for all public API functions and
 ```typescript
 /**
  * Wraps a function (sync or async) with proper error handling
- * 
+ *
  * @param {Function} fn - The function to wrap
  * @returns {Function} A new function that returns [result, error] tuples
- * 
+ *
  * @example
  * // Synchronous function
  * const safeParseInt = trycatch(parseInt);
  * const [num, error] = await safeParseInt("123");
- * 
+ *
  * @example
  * // Asynchronous function
  * const safeFetch = trycatch(fetch);
  * const [response, error] = await safeFetch("https://api.example.com");
  */
 function trycatch<TFunc extends (...args: any[]) => any>(
-  fn: TFunc
+  fn: TFunc,
 ): (...args: Parameters<TFunc>) => Promise<TryCatchResult<ReturnType<TFunc>>> {
   // Implementation...
 }
@@ -185,17 +187,20 @@ function trycatch<TFunc extends (...args: any[]) => any>(
 ## 🗺️ Project Progress
 
 The [CHANGELOG.md](CHANGELOG.md) file serves as a living document for tracking project status:
+
 - ✅ Completed features
 - 🔄 Current focus areas
 - 📝 Planned future work
 
 When contributing:
+
 - Review the CHANGELOG to understand current priorities
 - Update it when adding significant features or fixes
 
 ## ❓ Questions?
 
 If you have questions or need help, feel free to:
+
 - 🐞 Open an issue
 - 💬 Start a discussion in the Discussions tab
 

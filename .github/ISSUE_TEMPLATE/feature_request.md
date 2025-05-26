@@ -4,7 +4,7 @@ name: 🚀 Feature Request
 about: Suggest an idea for this project
 title: "[FEATURE] "
 labels: enhancement
-assignees: ''
+assignees: ""
 ---
 
 ## 🚀 Feature Description
@@ -50,4 +50,4 @@ function newFeature<T>(input: T): [ReturnType, TryCatchError] {
 
 ## 📝 Additional Context
 
-<!-- Add any other context, mockups, or examples about the feature request here --> 
+<!-- Add any other context, mockups, or examples about the feature request here -->
